@@ -1,14 +1,23 @@
 package edu.iis.mto.staticmock;
 
 import edu.iis.mto.staticmock.reader.NewsReader;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.util.List;
+
+import static org.hamcrest.EasyMock2Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -25,6 +34,7 @@ public class NewsLoaderTest {
     private IncomingNews incomingNews;
     private NewsReader testNewsReader;
     private NewsLoader newsLoader;
+
 
     @Before
     public void setUp() {
@@ -54,5 +64,13 @@ public class NewsLoaderTest {
 
         newsLoader = new NewsLoader();
     }
+
+    @Test
+    public void shouldCallLoadConfigurationMethodOnceInConfigurationLoader() {
+        PublishableNews result = newsLoader.loadNews();
+
+        verify(mockConfigurationLoader, times(1)).loadConfiguration();
+    }
+
 
 }
