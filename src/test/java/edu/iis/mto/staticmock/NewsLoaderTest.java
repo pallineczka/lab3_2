@@ -57,4 +57,16 @@ public class NewsLoaderTest {
         Assert.assertThat(publish.size(), is(equalTo(1)));
         Assert.assertThat(subscribed.size(), is(equalTo(3)));
     }
+
+    @Test public void publishableNewsShouldProperInfoContentTest(){
+        publishableNews = newsLoader.loadNews();
+
+        List<String> publish = Whitebox.getInternalState(publishableNews,"publicContent");
+        List<String> subscribed = Whitebox.getInternalState(publishableNews, "subscribentContent");
+
+        Assert.assertThat(subscribed.get(0), is(equalTo("A")));
+        Assert.assertThat(subscribed.get(1), is(equalTo("B")));
+        Assert.assertThat(subscribed.get(2), is(equalTo("C")));
+        Assert.assertThat(publish.get(0), is(equalTo("NONE")));
+    }
 }
