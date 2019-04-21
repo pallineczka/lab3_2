@@ -12,6 +12,8 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.List;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.hamcrest.Matchers.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -68,5 +70,10 @@ public class NewsLoaderTest {
         Assert.assertThat(subscribed.get(1), is(equalTo("B")));
         Assert.assertThat(subscribed.get(2), is(equalTo("C")));
         Assert.assertThat(publish.get(0), is(equalTo("NONE")));
+    }
+
+    @Test public void shouldLoadConfigurationBeCalledInsideLoadNews(){
+        newsLoader.loadNews();
+        verify(configurationLoader, times(1)).loadConfiguration();
     }
 }
