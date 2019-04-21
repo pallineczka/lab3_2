@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+			<version>4.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -31,8 +31,19 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-		
+
+	  <dependency>
+		  <groupId>org.powermock</groupId>
+		  <artifactId>powermock-module-junit4</artifactId>
+		  <version>1.7.1</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.powermock</groupId>
+		  <artifactId>powermock-api-mockito2</artifactId>
+		  <version>1.7.1</version>
+	  </dependency>
   </dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
