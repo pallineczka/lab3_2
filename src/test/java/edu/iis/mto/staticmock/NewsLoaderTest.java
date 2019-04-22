@@ -1,6 +1,7 @@
 package edu.iis.mto.staticmock;
 
 import edu.iis.mto.staticmock.reader.NewsReader;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +9,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -29,6 +37,7 @@ public class NewsLoaderTest {
     private NewsReader newsReader;
 
     private IncomingNews incomingNews;
+    private PublishableNews publishableNews;
 
     @Before
     public void init(){
@@ -49,5 +58,19 @@ public class NewsLoaderTest {
     public void testLoadNewsLoadConfigurationShouldBeCalledOnce() {
         newsLoader.loadNews();
         verify(configurationLoader, times(1)).loadConfiguration();
+    }
+
+    @Test
+    public void testPublishAndSubscribedLists(){
+        incomingNews.add(new IncomingInfo("Subscription type A",SubsciptionType.A));
+        incomingNews.add(new IncomingInfo("Subscription type B",SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("Subscription type C",SubsciptionType.C));
+        incomingNews.add(new IncomingInfo("Subscription type NONE",SubsciptionType.NONE));
+        incomingNews.add(new IncomingInfo("Subscription type NONE",SubsciptionType.NONE));
+        publishableNews = newsLoader.loadNews();
+        List<String> publish = Whitebox.getInternalState(publishableNews,"publicContent");
+        List<String> subscribed = Whitebox.getInternalState(publishableNews, "subscribentContent");
+        Assert.assertThat(publish.size(), is(equalTo(2)));
+        Assert.assertThat(subscribed.size(), is(equalTo(3)));
     }
 }
