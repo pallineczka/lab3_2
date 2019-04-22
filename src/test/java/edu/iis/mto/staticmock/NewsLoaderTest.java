@@ -52,6 +52,11 @@ public class NewsLoaderTest {
         when(configurationLoader.loadConfiguration()).thenReturn(new Configuration());
         when(newsReader.read()).thenReturn(incomingNews);
         when(NewsReaderFactory.getReader(Mockito.any())).thenReturn(newsReader);
+        incomingNews.add(new IncomingInfo("Subscription type A",SubsciptionType.A));
+        incomingNews.add(new IncomingInfo("Subscription type B",SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("Subscription type C",SubsciptionType.C));
+        incomingNews.add(new IncomingInfo("Subscription type NONE",SubsciptionType.NONE));
+        incomingNews.add(new IncomingInfo("Subscription type NONE 2",SubsciptionType.NONE));
     }
 
     @Test
@@ -62,15 +67,22 @@ public class NewsLoaderTest {
 
     @Test
     public void testPublishAndSubscribedLists(){
-        incomingNews.add(new IncomingInfo("Subscription type A",SubsciptionType.A));
-        incomingNews.add(new IncomingInfo("Subscription type B",SubsciptionType.B));
-        incomingNews.add(new IncomingInfo("Subscription type C",SubsciptionType.C));
-        incomingNews.add(new IncomingInfo("Subscription type NONE",SubsciptionType.NONE));
-        incomingNews.add(new IncomingInfo("Subscription type NONE",SubsciptionType.NONE));
         publishableNews = newsLoader.loadNews();
         List<String> publish = Whitebox.getInternalState(publishableNews,"publicContent");
         List<String> subscribed = Whitebox.getInternalState(publishableNews, "subscribentContent");
         Assert.assertThat(publish.size(), is(equalTo(2)));
         Assert.assertThat(subscribed.size(), is(equalTo(3)));
+    }
+
+    @Test
+    public void testPublishAndSubscribeListShouldReturnCorrectValues(){
+        publishableNews = newsLoader.loadNews();
+        List<String> publish = Whitebox.getInternalState(publishableNews,"publicContent");
+        List<String> subscribed = Whitebox.getInternalState(publishableNews, "subscribentContent");
+        Assert.assertThat(publish.get(0), is(equalTo("Subscription type NONE")));
+        Assert.assertThat(publish.get(1), is(equalTo("Subscription type NONE 2")));
+        Assert.assertThat(subscribed.get(0), is(equalTo("Subscription type A")));
+        Assert.assertThat(subscribed.get(1), is(equalTo("Subscription type B")));
+        Assert.assertThat(subscribed.get(2), is(equalTo("Subscription type C")));
     }
 }
