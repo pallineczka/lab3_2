@@ -16,10 +16,14 @@ import static org.hamcrest.EasyMock2Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
+//import static org.mockito.Mockito.verify;
+//import static org.mockito.internal.verification.VerificationModeFactory.times;
+//import static org.powermock.api.mockito.PowerMockito.mockStatic;
+//import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( {
@@ -34,6 +38,7 @@ public class NewsLoaderTest {
     private IncomingNews incomingNews;
     private NewsReader testNewsReader;
     private NewsLoader newsLoader;
+    private PublishableNews publishableNews;
 
 
     @Before
@@ -42,17 +47,17 @@ public class NewsLoaderTest {
         when(ConfigurationLoader.getInstance()).thenReturn(mockConfigurationLoader);
 
         config = new Configuration();
-        Whitebox.setInternalState(config, "readerType","testType");
+        Whitebox.setInternalState(config, "readerType", "testType");
         when(ConfigurationLoader.getInstance().loadConfiguration()).thenReturn(config);
 
         incomingNews = new IncomingNews();
-        incomingNews.add(new IncomingInfo("News1",SubsciptionType.NONE));
-        incomingNews.add(new IncomingInfo("News2",SubsciptionType.A));
-        incomingNews.add(new IncomingInfo("News3",SubsciptionType.NONE));
-        incomingNews.add(new IncomingInfo("News4",SubsciptionType.B));
-        incomingNews.add(new IncomingInfo("News5",SubsciptionType.C));
+        incomingNews.add(new IncomingInfo("News1", SubsciptionType.NONE));
+        incomingNews.add(new IncomingInfo("News2", SubsciptionType.A));
+        incomingNews.add(new IncomingInfo("News3", SubsciptionType.NONE));
+        incomingNews.add(new IncomingInfo("News4", SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("News5", SubsciptionType.C));
 
-        testNewsReader = new NewsReader () {
+        testNewsReader = new NewsReader() {
             @Override
             public IncomingNews read() {
                 return incomingNews;
@@ -72,5 +77,13 @@ public class NewsLoaderTest {
         verify(mockConfigurationLoader, times(1)).loadConfiguration();
     }
 
+    @Test
+    public void publishableNewsShouldSeparateNewsTest() {
+        publishableNews = newsLoader.loadNews();
 
+        List<String> publish = Whitebox.getInternalState(publishableNews, "publicContent");
+        List<String> subscribed = Whitebox.getInternalState(publishableNews, "subscribentContent");
+        Assert.assertThat(publish.size(), is(2));
+        Assert.assertThat(subscribed.size(), is(3));
+    }
 }
