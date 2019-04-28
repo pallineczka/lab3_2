@@ -12,18 +12,12 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.List;
 
-import static org.hamcrest.EasyMock2Matchers.equalTo;
+
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.internal.verification.VerificationModeFactory.times;
-//import static org.powermock.api.mockito.PowerMockito.mockStatic;
-//import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( {
