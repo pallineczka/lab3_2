@@ -42,6 +42,11 @@ public class NewsLoaderTest {
     public void init(){
 
         incomingNews = new IncomingNews();
+
+        incomingNews.add(new IncomingInfo("A",SubsciptionType.A));
+        incomingNews.add(new IncomingInfo("B",SubsciptionType.B));
+        incomingNews.add(new IncomingInfo("NONE",SubsciptionType.NONE));
+
         newsLoader = new NewsLoader();
 
         mockStatic(ConfigurationLoader.class);
@@ -66,10 +71,6 @@ public class NewsLoaderTest {
 
     @Test
     public void testPublishableNewsSeparatedSubsciption(){
-        incomingNews.add(new IncomingInfo("A",SubsciptionType.A));
-        incomingNews.add(new IncomingInfo("B",SubsciptionType.B));
-        incomingNews.add(new IncomingInfo("NONE",SubsciptionType.NONE));
-
         publishableNews = newsLoader.loadNews();
 
         List<String> publish = Whitebox.getInternalState(publishableNews,"publicContent");
@@ -79,4 +80,15 @@ public class NewsLoaderTest {
         Assert.assertThat(subscribed.size(), is(equalTo(2)));
     }
 
+    @Test
+    public void testPublishableNewsContainsRightInformation(){
+        publishableNews = newsLoader.loadNews();
+
+        List<String> publish = Whitebox.getInternalState(publishableNews,"publicContent");
+        List<String> subscribed = Whitebox.getInternalState(publishableNews, "subscribentContent");
+
+        Assert.assertThat(publish.get(0), is(equalTo("NONE")));
+        Assert.assertThat(subscribed.get(0), is(equalTo("A")));
+        Assert.assertThat(subscribed.get(1), is(equalTo("B")));
+    }
 }
